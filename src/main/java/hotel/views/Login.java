@@ -4,6 +4,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import hotel.controller.UsuarioController;
+import hotel.modelo.InfoSession;
+import hotel.modelo.Usuario;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,6 +55,14 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		super("Login");
+		
+		if(InfoSession.getUsuarioLogueado() != null) {
+			MenuUsuario menu = new MenuUsuario();
+			menu.setVisible(true);
+			dispose();
+		}
+		
 		setResizable(false);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -234,7 +247,25 @@ public class Login extends JFrame {
 		header.setLayout(null);
 	}
 	
+	//Login - Usuarios almacenados en la BD
 	private void Login() {
+	UsuarioController usuarioController = new UsuarioController();
+	Usuario usuario = usuarioController.login(txtUsuario.getText(), String.valueOf(txtContrasena.getPassword()));
+	
+	if(usuario != null) {
+		InfoSession.setUsuarioLogueado(usuario);
+		MenuUsuario menu = new MenuUsuario();
+		menu.setVisible(true);
+		dispose();
+	}else {
+		JOptionPane.showMessageDialog(null, "El Usuario o Contraseña incorrectos");
+	}
+	}
+	
+	
+	//Login con Usuario por defecto
+	/*
+	 private void Login() {
 		 String Usuario= "admin";
 	     String Contraseña="admin";
 
@@ -246,8 +277,11 @@ public class Login extends JFrame {
 	            dispose();	 
 	        }else {
 	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
-	        }
+	        }   
 	} 
+	*/
+	
+	
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();
